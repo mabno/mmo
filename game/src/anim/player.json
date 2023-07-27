@@ -1,0 +1,14 @@
+[
+	{ "sourceX": 0, "sourceY": 0, "sourceWidth": 68, "sourceHeight": 72, "offsetX": 0, "offsetY": 0, "width": 68, "height": 72 },
+	{ "sourceX": 68, "sourceY": 0, "sourceWidth": 68, "sourceHeight": 72, "offsetX": 0, "offsetY": 0, "width": 68, "height": 72 },
+	{ "sourceX": 204, "sourceY": 0, "sourceWidth": 68, "sourceHeight": 72, "offsetX": 0, "offsetY": 0, "width": 68, "height": 72 },
+	{ "sourceX": 0, "sourceY": 72, "sourceWidth": 68, "sourceHeight": 72, "offsetX": 0, "offsetY": 0, "width": 68, "height": 72},
+	{ "sourceX": 68, "sourceY": 72, "sourceWidth": 68, "sourceHeight": 72, "offsetX": 0, "offsetY": 0, "width": 68, "height": 72},
+	{ "sourceX": 204, "sourceY": 72, "sourceWidth": 68, "sourceHeight": 72, "offsetX": 0, "offsetY": 0, "width": 68, "height": 72},
+	{ "sourceX": 0, "sourceY": 144, "sourceWidth": 68, "sourceHeight": 72, "offsetX": 0, "offsetY": 0, "width": 68, "height": 72 },
+	{ "sourceX": 68, "sourceY": 144, "sourceWidth": 68, "sourceHeight": 72, "offsetX": 0, "offsetY": 0, "width": 68, "height": 72 },
+	{ "sourceX": 204, "sourceY": 144, "sourceWidth": 68, "sourceHeight": 72, "offsetX": 0, "offsetY": 0, "width": 68, "height": 72 },
+	{ "sourceX": 0, "sourceY": 216, "sourceWidth": 68, "sourceHeight": 72, "offsetX": 0, "offsetY": 0, "width": 68, "height": 72 },
+	{ "sourceX": 68, "sourceY": 216, "sourceWidth": 68, "sourceHeight": 72, "offsetX": 0, "offsetY": 0, "width": 68, "height": 72 },
+	{ "sourceX": 204, "sourceY": 216, "sourceWidth": 68, "sourceHeight": 72, "offsetX": 0, "offsetY": 0, "width": 68, "height": 72 }
+]
