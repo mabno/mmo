@@ -38,8 +38,8 @@ export const TILES = {
   GRASS2: 1,
   PATH_MIDDLE: 2,
   PATH_LEFT: 3,
-  PATH_RIGHT: 'PATH_RIGHT',
-  TREE: 'TREE',
+  PATH_RIGHT: 4,
+  TREE: 5,
 }
 
 export const NO_COLLISION_TILE_TYPES = {
