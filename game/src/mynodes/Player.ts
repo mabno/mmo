@@ -4,13 +4,13 @@ import AnimatedSprite from '../core/nodes/AnimatedSprite'
 import { Clip } from '../core/interfaces'
 import SpriteSheet from '../core/SpriteSheet'
 import { isSomeColliding } from '../helpers'
-import playerJson from '../anim/player.json'
+import playerAnim from '../anim/player.json'
 
-const playerSpriteSheet = new SpriteSheet(playerJson as Clip[])
+const playerSpriteSheet = new SpriteSheet(playerAnim as Clip[])
 
 class Player extends Rectangle {
   sprite: AnimatedSprite
-  vel: number = 180
+  vel: number = 40
   lastPressed: number | null = null
   colliders: Rectangle[] = []
 
@@ -22,12 +22,13 @@ class Player extends Rectangle {
       playerSpriteSheet.get([0]),
       AssetsManager.instance.getImage('player'),
       {
-        'bottom-walk': playerSpriteSheet.get([1, 0, 2, 0]),
-        'left-walk': playerSpriteSheet.get([4, 3, 5, 3]),
-        'right-walk': playerSpriteSheet.get([7, 6, 8, 6]),
-        'top-walk': playerSpriteSheet.get([10, 9, 11, 9]),
+        'bottom-walk': playerSpriteSheet.get([1, 2, 3, 4]),
+        'right-walk': playerSpriteSheet.get([6, 7, 8, 9]),
+        'top-walk': playerSpriteSheet.get([11, 12, 13, 14]),
+        'left-walk': playerSpriteSheet.get([16, 17, 18, 19]),
       }
     )
+    this.sprite.play('bottom-walk')
 
     this.addNode(this.sprite)
 
@@ -47,7 +48,7 @@ class Player extends Rectangle {
       case 87:
         this.y -= this.vel * deltaTime
         if (!this.sprite.isActive('top-walk')) {
-          this.sprite.defaultClip = playerSpriteSheet.get([9])
+          this.sprite.defaultClip = playerSpriteSheet.get([10])
           this.sprite.play('top-walk')
         }
         isSomeColliding.call(this, this.colliders, (collider: Rectangle) => {
@@ -73,7 +74,7 @@ class Player extends Rectangle {
       case 65:
         this.x -= this.vel * deltaTime
         if (!this.sprite.isActive('left-walk')) {
-          this.sprite.defaultClip = playerSpriteSheet.get([3])
+          this.sprite.defaultClip = playerSpriteSheet.get([15])
           this.sprite.play('left-walk')
         }
         isSomeColliding.call(this, this.colliders, (collider: Rectangle) => {
@@ -86,7 +87,7 @@ class Player extends Rectangle {
       case 68:
         this.x += this.vel * deltaTime
         if (!this.sprite.isActive('right-walk')) {
-          this.sprite.defaultClip = playerSpriteSheet.get([6])
+          this.sprite.defaultClip = playerSpriteSheet.get([5])
           this.sprite.play('right-walk')
         }
         isSomeColliding.call(this, this.colliders, (collider: Rectangle) => {

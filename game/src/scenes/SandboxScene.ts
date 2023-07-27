@@ -5,11 +5,12 @@ import AnimatedSprite from '../core/nodes/AnimatedSprite'
 import Text from '../core/nodes/Text'
 import SpriteSheet from '../core/SpriteSheet'
 import Player from '../mynodes/Player'
-import Walls from '../mynodes/Walls'
+import Map from '../mynodes/Map'
 import mapGen from '../mapGen'
 
 import lighJson from '../anim/light.json'
 import fireJson from '../anim/fire.json'
+import Tile from '../mynodes/Tile'
 
 const lightSpriteSheet = new SpriteSheet(lighJson)
 const fireSpriteSheet = new SpriteSheet(fireJson)
@@ -25,9 +26,8 @@ class Darkness extends Node {
 }
 
 class SandboxScene extends Node {
-  player?: Player
-  playerLight?: AnimatedSprite
-  walls?: Walls
+  player: Player
+  map: Map
 
   public enter(): void {
     super.enter()
@@ -36,22 +36,9 @@ class SandboxScene extends Node {
     let map = mapGen(AssetsManager.instance.getImage('worldtest'))
     console.log(map)
 
-    this.walls = new Walls()
-    this.walls.map = map
-    this.player = new Player({ x: 200, y: 150 }, { width: 40, height: 32 })
-    this.player.colliders = this.walls.children
-
-    this.playerLight = new AnimatedSprite(
-      { x: 100, y: 100 },
-      { x: 0, y: 0 },
-      lightSpriteSheet.get([0]),
-      AssetsManager.instance.getImage('light'),
-      {
-        loop: lightSpriteSheet.get([0, 1, 2, 3, 4, 5, 4, 3, 2, 1]),
-      }
-    )
-    this.playerLight.animationFps = 6
-    this.playerLight.play('loop')
+    this.map = new Map(map)
+    this.player = new Player({ x: 200, y: 150 }, { width: 16, height: 16 })
+    console.log(this.map.children)
 
     const instructionsLabel = new Text({ x: 200, y: 100 }, 'Movement: WASD keys', {
       fillStyle: '#fff',
@@ -60,42 +47,15 @@ class SandboxScene extends Node {
       textAlign: 'center',
     })
 
-    const light = new AnimatedSprite(
-      { x: 640, y: 640 },
-      { x: 0, y: 0 },
-      lightSpriteSheet.get([0]),
-      AssetsManager.instance.getImage('light'),
-      {
-        loop: lightSpriteSheet.get([0, 1, 2, 3, 4, 5, 4, 3, 2, 1]),
-      }
-    )
-    light.animationFps = 6
-    light.play('loop')
-
-    const fire = new AnimatedSprite({ x: 640, y: 640 }, { x: 0, y: 0 }, fireSpriteSheet.get([0]), AssetsManager.instance.getImage('fire'), {
-      loop: fireSpriteSheet.get([0, 1, 2, 3, 4, 5, 6, 7]),
-    })
-    fire.animationFps = 6
-    fire.play('loop')
-    fire.centerX = light.centerX
-    fire.centerY = light.centerY
-
-    this.addNode(new Darkness())
-    this.compositeOperation = 'destination-out'
-    this.addNode(this.playerLight)
-    this.addNode(light)
-    this.compositeOperation = 'destination-over'
-    this.addNode(this.player)
-    this.addNode(fire)
     this.addNode(instructionsLabel)
-    this.addNode(this.walls)
+    this.addNode(this.player)
+    this.addNode(this.map)
+    this.addNode(new Darkness())
+    this.player.colliders = this.map.children.filter((e: Tile) => e.type === 999).map((e) => e.children[0])
   }
 
   public update(): void {
     super.update()
-    if (!this.playerLight || !this.player) return
-    this.playerLight.centerX = this.player.centerX
-    this.playerLight.centerY = this.player.centerY
     this.camera.x = this.player.centerX - this.viewport.width / 2
     this.camera.y = this.player.centerY - this.viewport.height / 2
   }
