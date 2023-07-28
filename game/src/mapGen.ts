@@ -1,6 +1,6 @@
-import { TILES, TILE_TYPES } from './constants/tiles'
+import { OBJECT_TILES, OBJECT_TILES_COLOR, TILES, TILES_COLOR } from './constants/tiles'
 
-function imageData(img: HTMLImageElement) {
+function imageData(img: HTMLImageElement): Uint8ClampedArray {
   const fakeCanvas = document.createElement('canvas')
   document.body.append(fakeCanvas)
   fakeCanvas.width = img.width
@@ -12,14 +12,20 @@ function imageData(img: HTMLImageElement) {
   return fakeCtx.getImageData(0, 0, img.width, img.height).data
 }
 
-function mapGen(img: HTMLImageElement) {
-  const data = imageData(img)
-  data.forEach((x) => x == 1 && console.log(x))
+function mapGen(tilesImage: HTMLImageElement, objectsImage: HTMLImageElement): [number[][], number[][]] {
+  const tiles = imageData(tilesImage)
+  const objects = imageData(objectsImage)
+  return [imageToMatrix(tiles, tilesImage.width, 'tiles'), imageToMatrix(objects, objectsImage.width, 'objects')]
+}
+
+function imageToMatrix(data: Uint8ClampedArray, imageWidth: number, type: 'tiles' | 'objects') {
+  const tiles = type === 'tiles' ? TILES : OBJECT_TILES
+  const colors = type === 'tiles' ? TILES_COLOR : OBJECT_TILES_COLOR
   let world: number[][] = [[]]
   let col = 0
   let row = 0
   for (let i = 0; i < data.length / 4; i++) {
-    if (col === img.width) {
+    if (col === imageWidth) {
       world.push([])
       row++
       col = 0
@@ -29,9 +35,9 @@ function mapGen(img: HTMLImageElement) {
     let g = data[i * 4 + 1]
     let b = data[i * 4 + 2]
 
-    Object.keys(TILES).forEach((e) => {
-      if (r === TILE_TYPES[e].color[0] && g === TILE_TYPES[e].color[1] && b === TILE_TYPES[e].color[2]) {
-        world[row][col] = TILES[e]
+    Object.values(tiles).forEach((e) => {
+      if (r === colors[e][0] && g === colors[e][1] && b === colors[e][2]) {
+        world[row][col] = e
       }
     })
 

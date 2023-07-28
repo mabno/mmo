@@ -19,6 +19,7 @@ abstract class Node {
   protected input: InputManager = InputManager.instance
 
   private _children: Node[] = []
+  private _parent: Node
 
   constructor(pos: Vector2D = { x: 0, y: 0 }) {
     this.id = uuid()
@@ -32,6 +33,10 @@ abstract class Node {
 
   public get children(): any[] {
     return this._children.sort((a, b) => b.renderPriority - a.renderPriority)
+  }
+
+  public get parent(): Node {
+    return this._parent
   }
 
   public runChildren(): void {
@@ -48,6 +53,7 @@ abstract class Node {
     if (!node.compositeOperation) node.compositeOperation = this.compositeOperation
     node.ctx = this.ctx
     node.camera = this.camera
+    node._parent = this
     node.enter()
     this._children.push(node)
   }
@@ -57,6 +63,10 @@ abstract class Node {
     this._children = this._children.filter((e) => e.id !== node.id)
     this.input.removeEvents(node.id)
     if (prevLength !== this._children.length) node.exit()
+  }
+
+  distanceTo(node: Node): number {
+    return Math.sqrt(Math.pow(this.x - node.x, 2) + Math.pow(this.y - node.y, 2))
   }
 
   public enter(): void {}

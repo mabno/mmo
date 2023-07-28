@@ -11,6 +11,7 @@ import wallImage from './assets/wall.png'
 import lightImage from './assets/light3.png'
 import fireImage from './assets/fire.png'
 import worldtestImage from './assets/worldtest.png'
+import worldtestObjectsImage from './assets/worldtest-objects.png'
 import tilemapImage from './assets/punyworld-overworld-tileset.png'
 
 const config = { width: 400, height: 300 }
@@ -25,6 +26,7 @@ game.init = function () {
   AssetsManager.instance.addImage('light', lightImage)
   AssetsManager.instance.addImage('fire', fireImage)
   AssetsManager.instance.addImage('worldtest', worldtestImage)
+  AssetsManager.instance.addImage('worldtestObjects', worldtestObjectsImage)
   AssetsManager.instance.addImage('tilemap', tilemapImage)
 
   AssetsManager.instance.load()

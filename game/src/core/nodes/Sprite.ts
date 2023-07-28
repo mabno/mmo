@@ -37,8 +37,8 @@ class Sprite extends Rectangle {
       this.clip.sourceY,
       this.clip.sourceWidth,
       this.clip.sourceHeight,
-      ~~((this.x - this.pivot.x - this.clip.offsetX - this.camera.x) / 4) * 4,
-      ~~((this.y - this.pivot.y - this.clip.offsetY - this.camera.y) / 4) * 4,
+      ~~((this.x - this.pivot.x - this.clip.offsetX - this.camera.x) / 2) * 2,
+      ~~((this.y - this.pivot.y - this.clip.offsetY - this.camera.y) / 2) * 2,
       this.width,
       this.height
     )

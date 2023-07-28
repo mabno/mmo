@@ -1,51 +1,39 @@
-export type TileType = {
-  color: [number, number, number]
-  coordinates: [number, number]
-}
-
-export const GRASS: TileType = {
-  color: [255, 255, 255],
-  coordinates: [0, 0],
-}
-
-export const GRASS2: TileType = {
-  color: [0, 0, 0],
-  coordinates: [16, 0],
-}
-
-export const PATH_MIDDLE: TileType = {
-  color: [0, 162, 232],
-  coordinates: [128, 16],
-}
-
-export const PATH_LEFT: TileType = {
-  color: [237, 28, 36],
-  coordinates: [160, 16],
-}
-
-export const PATH_RIGHT: TileType = {
-  color: [255, 242, 0],
-  coordinates: [192, 16],
-}
-
-export const TREE: TileType = {
-  color: [255, 242, 0],
-  coordinates: [192, 16],
-}
-
-export const TILES = {
+export const TILES: Record<string, number> = {
   GRASS: 0,
   GRASS2: 1,
   PATH_MIDDLE: 2,
   PATH_LEFT: 3,
   PATH_RIGHT: 4,
-  TREE: 5,
+  PATH_CORNER_BOTTOMRIGHT: 5,
+  PATH_BOTTOM: 6,
+  PATH_TOP: 7,
+  PATH_CORNER_TOPRIGHT: 8,
+  PATH_CORNER_TOPLEFT: 9,
+  PATH_CORNER_BOTTOMLEFT: 10,
 }
 
-export const NO_COLLISION_TILE_TYPES = {
-  [TILES.GRASS]: GRASS,
-  [TILES.GRASS2]: GRASS2,
-  [TILES.PATH_MIDDLE]: PATH_MIDDLE,
-  [TILES.PATH_LEFT]: PATH_LEFT,
-  [TILES.PATH_RIGHT]: PATH_RIGHT,
+export const TILES_COLOR = {
+  [TILES.GRASS]: [255, 255, 255],
+  [TILES.GRASS2]: [0, 0, 0],
+  [TILES.PATH_MIDDLE]: [0, 162, 232],
+  [TILES.PATH_LEFT]: [237, 28, 36],
+  [TILES.PATH_RIGHT]: [255, 242, 0],
+  [TILES.PATH_CORNER_BOTTOMRIGHT]: [127, 127, 127],
+  [TILES.PATH_CORNER_TOPRIGHT]: [255, 174, 201],
+  [TILES.PATH_CORNER_TOPLEFT]: [185, 122, 87],
+  [TILES.PATH_CORNER_BOTTOMLEFT]: [153, 217, 234],
+  [TILES.PATH_BOTTOM]: [195, 195, 195],
+  [TILES.PATH_TOP]: [63, 72, 204],
+}
+
+export const OBJECT_TILES: Record<string, number> = {
+  TREE: 0,
+  WATER1: 1,
+  WATER2: 2,
+}
+
+export const OBJECT_TILES_COLOR = {
+  [OBJECT_TILES.TREE]: [0, 255, 0],
+  [OBJECT_TILES.WATER1]: [0, 0, 255],
+  [OBJECT_TILES.WATER2]: [0, 0, 105],
 }

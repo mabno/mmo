@@ -17,6 +17,7 @@ class RootNode extends Node {
     this.input.cursorHide()
     this.fps = new Text({ x: 1, y: 20 }, 'dfdsfds', { fillStyle: '#fff', font: 'sans-serif', fontSize: 16, textAlign: 'left' })
     this.fps.compositeOperation = 'source-over'
+    this.fps.renderPriority = 0
 
     const cursor = new Cursor({ x: 0, y: 0 })
     cursor.compositeOperation = 'source-over'

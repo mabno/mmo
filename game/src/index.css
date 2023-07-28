@@ -2,6 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+* {
+  font-smooth: never;
+  font-smoothing: none;
+}
+
 #canvas {
   image-rendering: pixelated;
+}
+
+@font-face {
+  font-family: OldSchoolAdventures;
+  src: url('./assets/OldSchoolAdventures-42j9.ttf') format('truetype');
 }

@@ -1,10 +1,12 @@
 import AssetsManager from '../core/AssetsManager'
 import Rectangle from '../core/nodes/Rectangle'
 import AnimatedSprite from '../core/nodes/AnimatedSprite'
-import { Clip } from '../core/interfaces'
+import { Clip, Dimension2D, Vector2D } from '../core/interfaces'
 import SpriteSheet from '../core/SpriteSheet'
 import { isSomeColliding } from '../helpers'
 import playerAnim from '../anim/player.json'
+import { Socket } from 'socket.io-client'
+import { PlayerDirection } from '../types'
 
 const playerSpriteSheet = new SpriteSheet(playerAnim as Clip[])
 
@@ -13,6 +15,13 @@ class Player extends Rectangle {
   vel: number = 40
   lastPressed: number | null = null
   colliders: Rectangle[] = []
+  direction: PlayerDirection = 'bottom'
+  private socket: Socket
+
+  constructor(position: Vector2D, size: Dimension2D, socket: Socket) {
+    super(position, size)
+    this.socket = socket
+  }
 
   public enter(): void {
     console.log('Player enter')
@@ -46,6 +55,7 @@ class Player extends Rectangle {
     const { deltaTime } = this.globalState
     switch (this.lastPressed) {
       case 87:
+        this.direction = 'top'
         this.y -= this.vel * deltaTime
         if (!this.sprite.isActive('top-walk')) {
           this.sprite.defaultClip = playerSpriteSheet.get([10])
@@ -59,6 +69,7 @@ class Player extends Rectangle {
         })
         break
       case 83:
+        this.direction = 'bottom'
         this.y += this.vel * deltaTime
         if (!this.sprite.isActive('bottom-walk')) {
           this.sprite.defaultClip = playerSpriteSheet.get([0])
@@ -72,6 +83,7 @@ class Player extends Rectangle {
         })
         break
       case 65:
+        this.direction = 'left'
         this.x -= this.vel * deltaTime
         if (!this.sprite.isActive('left-walk')) {
           this.sprite.defaultClip = playerSpriteSheet.get([15])
@@ -85,6 +97,7 @@ class Player extends Rectangle {
         })
         break
       case 68:
+        this.direction = 'right'
         this.x += this.vel * deltaTime
         if (!this.sprite.isActive('right-walk')) {
           this.sprite.defaultClip = playerSpriteSheet.get([5])
@@ -105,15 +118,23 @@ class Player extends Rectangle {
         break
     }
 
-    this.sprite.centerX = this.centerX
-    this.sprite.bottom = this.bottom
+    this.socket.emit('player:movement', {
+      id: this.socket.id,
+      position: { x: this.x, y: this.y },
+      action: [87, 83, 65, 68].includes(this.lastPressed ?? 0) ? 'walk' : 'idle',
+      direction: this.direction,
+    })
+
+    this.sprite.x = this.x - 12
+    this.sprite.y = this.y - 16
   }
 
   public render(): void {
     super.render()
-    this.ctx.strokeStyle = 'red'
+    /* this.ctx.strokeStyle = 'red'
     this.ctx.lineWidth = 1
     this.ctx.strokeRect(~~((this.x - this.camera.x) / 4) * 4, ~~((this.y - this.camera.y) / 4) * 4, this.width, this.height)
+    */
   }
 }
 
