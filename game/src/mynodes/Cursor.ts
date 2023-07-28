@@ -1,8 +1,8 @@
-import AssetsManager from '../core/AssetsManager';
-import Node from '../core/Node';
-import Sprite from '../core/nodes/Sprite';
+import AssetsManager from '../core/AssetsManager'
+import Node from '../core/Node'
+import Sprite from '../core/nodes/Sprite'
 
-class Cursor extends Node{
+/*class Cursor extends Node{
 	sprite: Sprite;
 
 	public enter() : void {
@@ -25,4 +25,4 @@ class Cursor extends Node{
 	}
 }
 
-export default Cursor;
+export default Cursor;*/

@@ -7,11 +7,15 @@ class SpriteSheet {
     this._clips = clips
   }
 
-  public get(indexes: number[]): any {
-    if (indexes.length === 1) {
-      return this._clips[indexes[0]]
+  get(index: number): Clip
+  get(indexes: number[]): Clip[]
+
+  get(index: unknown) {
+    if (typeof index === 'number') {
+      return this._clips[index] as Clip
+    } else if (Array.isArray(index)) {
+      return index.map((i) => this._clips[i])
     }
-    return indexes.map((index) => this._clips[index])
   }
 }
 

@@ -28,7 +28,6 @@ class Sprite extends Rectangle {
 
   public render(): void {
     super.render()
-
     this.ctx.save()
     this.ctx.translate(this.pivot.x, this.pivot.y)
     this.ctx.drawImage(

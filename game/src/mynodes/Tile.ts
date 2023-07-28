@@ -8,7 +8,7 @@ export default class Tile extends Rectangle {
   tileCoord: [number, number]
 
   constructor(position: Vector2D, type: number, tileCoord: [number, number]) {
-    super(position, { width: 16, height: 16 })
+    super(position, { width: 64, height: 64 })
     this.type = type
     this.tileCoord = tileCoord
   }
@@ -20,15 +20,22 @@ export default class Tile extends Rectangle {
       {
         sourceX: this.tileCoord[0],
         sourceY: this.tileCoord[1],
-        sourceWidth: 16,
-        sourceHeight: 16,
+        sourceWidth: this.width,
+        sourceHeight: this.height,
         offsetX: 0,
         offsetY: 0,
-        width: 16,
-        height: 16,
+        width: this.width,
+        height: this.height,
       },
       AssetsManager.instance.getImage('tilemap')
     )
     this.addNode(wall)
+  }
+
+  public render(): void {
+    super.render()
+    this.ctx.strokeStyle = 'red'
+    this.ctx.lineWidth = 1
+    this.ctx.strokeRect(~~((this.x - this.camera.x) / 4) * 4, ~~((this.y - this.camera.y) / 4) * 4, this.width, this.height)
   }
 }

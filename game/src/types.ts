@@ -1,5 +1,5 @@
 export type PlayerAction = 'idle' | 'walk'
-export type PlayerDirection = 'top' | 'bottom' | 'left' | 'right'
+export type PlayerDirection = 'top' | 'bottom' | 'left' | 'right' | 'bottom-left' | 'bottom-right' | 'top-left' | 'top-right'
 
 export interface ServerPlayer {
   id: string

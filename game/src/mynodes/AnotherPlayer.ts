@@ -20,8 +20,8 @@ class AnotherPlayer extends Rectangle {
   private direction: PlayerDirection
   private action: PlayerAction
 
-  constructor(position: Vector2D, size: Dimension2D, direction: PlayerDirection, action: PlayerAction, username: string) {
-    super(position, size)
+  constructor(position: Vector2D, direction: PlayerDirection, action: PlayerAction, username: string) {
+    super(position, { width: 54, height: 32 })
     this.targetPosition = { x: position.x, y: position.y }
     this.distance = { x: 0, y: 0 }
     this.direction = direction
@@ -31,8 +31,8 @@ class AnotherPlayer extends Rectangle {
 
   public enter(): void {
     console.log('Player enter')
-    this.nameLabel = new Text({ x: this.x, y: this.y - 10 }, this.username, {
-      fontSize: 6,
+    this.nameLabel = new Text({ x: this.x, y: this.y }, this.username, {
+      fontSize: 14,
       font: 'OldSchoolAdventures',
       fillStyle: 'white',
       textAlign: 'center',
@@ -90,25 +90,23 @@ class AnotherPlayer extends Rectangle {
 
   public update(): void {
     super.update()
-    const { deltaTime } = this.globalState
     if (this.distance.x !== 0 || this.distance.y !== 0) {
-      this.x += this.distance.x * 0.1
-      this.y += this.distance.y * 0.1
+      this.x += this.distance.x * 0.3
+      this.y += this.distance.y * 0.3
     }
     this.calculateDistance()
 
-    this.sprite.x = this.x - 12
-    this.sprite.y = this.y - 16
-    this.nameLabel.x = this.x + 5
-    this.nameLabel.y = this.y - 14
+    this.sprite.x = this.x - 34
+    this.sprite.y = this.y - 54
+    this.nameLabel.x = this.x + 32
+    this.nameLabel.y = this.y - 54
   }
 
   public render(): void {
     super.render()
-    /* this.ctx.strokeStyle = 'red'
+    this.ctx.strokeStyle = 'red'
     this.ctx.lineWidth = 1
     this.ctx.strokeRect(~~((this.x - this.camera.x) / 4) * 4, ~~((this.y - this.camera.y) / 4) * 4, this.width, this.height)
-    */
   }
 }
 

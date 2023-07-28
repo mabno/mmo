@@ -9,6 +9,14 @@ import {
 import { Socket } from 'socket.io';
 import { Player } from './player.entity';
 
+export const EVENTS = {
+  SOCKET_CONNECT: 'connect',
+  GAME_INIT: 'game:init',
+  PLAYER_CONNECTION: 'player:connection',
+  PLAYER_DISCONNECTION: 'player:disconnection',
+  PLAYER_MOVEMENT: 'player:movement',
+};
+
 @WebSocketGateway(80, { cors: { origin: '*' } })
 export class GameGateway
   implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit
@@ -18,7 +26,7 @@ export class GameGateway
 
   players: Player[] = [];
 
-  @SubscribeMessage('player:movement')
+  @SubscribeMessage(EVENTS.PLAYER_MOVEMENT)
   handleMessage(client: any, payload: Omit<Player, 'username'>): void {
     const playerWhoMoves = this.players.find((x) => x.id === payload.id);
     if (!playerWhoMoves) return;
@@ -26,17 +34,17 @@ export class GameGateway
     playerWhoMoves.position.y = payload.position.y;
     playerWhoMoves.direction = payload.direction;
     playerWhoMoves.action = payload.action;
-    client.broadcast.emit('player:movement', payload);
+    client.broadcast.emit(EVENTS.PLAYER_MOVEMENT, payload);
     console.log(payload);
   }
 
-  @SubscribeMessage('init')
+  @SubscribeMessage(EVENTS.GAME_INIT)
   handleInit(client: any, payload: Player): void {
     const player: Player = payload;
-    client.emit('init', this.players);
+    client.emit(EVENTS.GAME_INIT, this.players);
 
     this.players.push(player);
-    client.broadcast.emit('user_connection', player);
+    client.broadcast.emit(EVENTS.PLAYER_CONNECTION, player);
   }
 
   afterInit(server: any) {
@@ -49,6 +57,6 @@ export class GameGateway
   handleDisconnect(client: Socket) {
     console.log('disconnected', client.id);
     this.players = this.players.filter((player) => player.id !== client.id);
-    client.broadcast.emit('user_disconnection', client.id);
+    client.broadcast.emit(EVENTS.PLAYER_DISCONNECTION, client.id);
   }
 }
