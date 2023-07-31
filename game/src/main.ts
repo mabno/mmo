@@ -23,3 +23,7 @@ game.init = function () {
 window.addEventListener('DOMContentLoaded', () => {
   game.run()
 })
+
+window.addEventListener(`contextmenu`, (e) => {
+  e.preventDefault()
+})

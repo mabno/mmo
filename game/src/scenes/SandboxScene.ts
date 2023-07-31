@@ -15,10 +15,13 @@ import Map from '../mynodes/Map'
 import { OBJECT_TILES } from '../constants/tiles'
 import Water from '../mynodes/Water'
 import AnotherPlayer from '../mynodes/AnotherPlayer'
-import { ServerPlayer } from '../types'
+import { PlayerPayload, AttackPayload } from '../types'
 import SocketService from '../SocketService'
+import { Vector2D } from '../core/interfaces'
+import { DIRECTION_MOVEMENT } from '../constants/player'
 
 class SandboxScene extends Node {
+  indicatorsText: Text
   player?: Player
   playerLight: AnimatedSprite
   map: Map
@@ -27,6 +30,20 @@ class SandboxScene extends Node {
 
   public enter(): void {
     super.enter()
+
+    this.indicatorsText = new Text(
+      { x: 5, y: this.viewport.height - 40 },
+      'ddsfsd',
+      {
+        fillStyle: '#fff',
+        font: 'OldSchoolAdventures',
+        fontSize: 24,
+        textAlign: 'left',
+      },
+      30
+    )
+    this.indicatorsText.compositeOperation = 'source-over'
+    this.addNode(this.indicatorsText)
 
     this.camera = { x: 0, y: 0 }
     let map = mapGen(AssetsManager.instance.getImage('worldtest'), AssetsManager.instance.getImage('worldtestObjects'))
@@ -61,22 +78,23 @@ class SandboxScene extends Node {
       this.player.renderPriority = 2
       this.addNode(this.player)
       this.player.colliders = this.children.filter((x: Rectangle) => x instanceof Tree || (x instanceof Water && x.type === 1))
-      console.log(this.player.colliders)
       this.socketService.emitInit({
         id: this.socketService.socketId,
         username: username,
         position: { x: 200, y: 150 },
         direction: 'bottom',
         action: 'idle',
+        velocity: this.player.vel,
       })
     })
     this.socketService.onGameInit(this.setInitialConditions.bind(this))
     this.socketService.onPlayerConnection(this.onPlayerConnection.bind(this))
     this.socketService.onPlayerDisconnection(this.onPlayerDisconnection.bind(this))
     this.socketService.onPlayerMovement(this.onPlayerMovement.bind(this))
+    this.socketService.onPlayerAttack(this.onPlayerAttack.bind(this))
   }
 
-  addPlayer(player: ServerPlayer) {
+  addPlayer(player: PlayerPayload) {
     const anotherPlayer = new AnotherPlayer({ x: player.position.x, y: player.position.y }, 'bottom', 'idle', player.username)
     this.anotherPlayers.push(anotherPlayer)
     anotherPlayer.socketId = player.id
@@ -84,28 +102,44 @@ class SandboxScene extends Node {
     this.addNode(anotherPlayer)
   }
 
-  onPlayerMovement(data: ServerPlayer) {
+  onPlayerAttack(data: AttackPayload) {
+    console.log('Auch!')
+    if (data.playerId === this.socketService.socketId && this.player) {
+      this.player.damage(data.damage)
+    } else {
+      const playerWhoReceivesDamage = this.anotherPlayers.find((x) => x.socketId === data.playerId)
+      if (!playerWhoReceivesDamage) return
+      playerWhoReceivesDamage.changeAction('damage')
+    }
+  }
+
+  onPlayerMovement(data: PlayerPayload) {
     const playerWhoMoves = this.anotherPlayers.find((x) => x.socketId === data.id)
     if (!playerWhoMoves) return
     playerWhoMoves.targetPosition.x = data.position.x
     playerWhoMoves.targetPosition.y = data.position.y
     playerWhoMoves.setDirection(data.direction)
-    playerWhoMoves.changeAction(data.action)
+    playerWhoMoves.changeAction(data.action, data.velocity)
   }
 
-  setInitialConditions(data: ServerPlayer[]) {
+  setInitialConditions(data: PlayerPayload[]) {
     data.forEach((player) => {
       this.addPlayer(player)
     })
   }
 
-  onPlayerConnection(data: ServerPlayer) {
+  onPlayerConnection(data: PlayerPayload) {
     this.addPlayer(data)
     console.log('new user!', data)
   }
 
   onPlayerDisconnection = (data: string) => {
     console.log('user disconnected', data)
+
+    if (data === this.socketService.socketId) {
+      document.location = 'https://youtu.be/R0lqowYD_Tg'
+      return
+    }
     this.anotherPlayers.forEach((x) => {
       if (x.socketId === data) {
         this.removeNode(x)
@@ -116,9 +150,22 @@ class SandboxScene extends Node {
 
   public update(): void {
     super.update()
+    let cameraMovement: Vector2D = { x: 0, y: 0 }
+    let cameraTransition: Vector2D = { x: 0, y: 0 }
     if (this.player) {
-      this.camera.x = this.player.centerX - this.viewport.width / 2
-      this.camera.y = this.player.centerY - this.viewport.height / 2
+      if (this.player.targetMode) {
+        cameraMovement = DIRECTION_MOVEMENT[this.player.direction]
+      } else {
+        cameraMovement.x = 0
+        cameraMovement.y = 0
+      }
+      cameraTransition.x = this.player.centerX - this.viewport.width / 2 + cameraMovement.x * 300
+      cameraTransition.y = this.player.centerY - this.viewport.height / 2 + cameraMovement.y * 300
+
+      this.camera.x += ~~((cameraTransition.x - this.camera.x) * 0.05)
+      this.camera.y += ~~((cameraTransition.y - this.camera.y) * 0.05)
+
+      this.indicatorsText.content = `Health: ${this.player.getHealth()} / 100\nStamina: ${~~this.player.getStamina()} / 100`
     }
   }
 }

@@ -34,8 +34,8 @@ export default class Tile extends Rectangle {
 
   public render(): void {
     super.render()
-    this.ctx.strokeStyle = 'red'
+    /* this.ctx.strokeStyle = 'red'
     this.ctx.lineWidth = 1
-    this.ctx.strokeRect(~~((this.x - this.camera.x) / 4) * 4, ~~((this.y - this.camera.y) / 4) * 4, this.width, this.height)
+    this.ctx.strokeRect(~~((this.x - this.camera.x) / 4) * 4, ~~((this.y - this.camera.y) / 4) * 4, this.width, this.height)*/
   }
 }

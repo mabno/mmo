@@ -4,4 +4,5 @@ export const EVENTS = {
   PLAYER_CONNECTION: 'player:connection',
   PLAYER_DISCONNECTION: 'player:disconnection',
   PLAYER_MOVEMENT: 'player:movement',
+  PLAYER_ATTACK: 'player:attack',
 }

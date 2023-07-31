@@ -5,19 +5,35 @@ class AnimatedSprite extends Sprite {
   private _timeElapsed: number = 0
   private _animations: AssociativeArray<Clip[]>
   private _animationIndex: number = 0
+  private _mode: 'loop' | 'once' = 'loop'
 
+  private _defaultClip: Clip
   private _currentAnimation: string | null = null
 
   public animationFps: number = 4
-  public defaultClip: Clip
 
   constructor(pos: Vector2D, pivot: Vector2D, defaultClip: Clip, texture: HTMLImageElement, animations: AssociativeArray<Clip[]>) {
     super(pos, pivot, defaultClip, texture)
-    this.defaultClip = defaultClip
+    this._defaultClip = defaultClip
     this._animations = animations
   }
 
+  getCurrentAnimation(): string | null {
+    return this._currentAnimation
+  }
+
+  setDefaultClip(clip: Clip): void {
+    this._defaultClip = clip
+  }
+
   public play(key: string): void {
+    this._mode = 'loop'
+    this._animationIndex = 0
+    this._currentAnimation = key
+  }
+
+  public playOnce(key: string): void {
+    this._mode = 'once'
     this._animationIndex = 0
     this._currentAnimation = key
   }
@@ -32,7 +48,7 @@ class AnimatedSprite extends Sprite {
   }
 
   public toDefaultClip(): void {
-    this.clip = this.defaultClip
+    this.clip = this._defaultClip
     this.width = this.clip.width
     this.height = this.clip.height
   }
@@ -57,6 +73,10 @@ class AnimatedSprite extends Sprite {
 
       this._animationIndex++
       this._timeElapsed = 0
+    }
+
+    if (this._mode === 'once' && this._animationIndex - 1 >= this._animations[this._currentAnimation].length) {
+      this.stop()
     }
   }
 }

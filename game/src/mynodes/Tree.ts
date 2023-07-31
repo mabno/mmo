@@ -27,9 +27,9 @@ export default class Tree extends Rectangle {
       if (child instanceof Player || child instanceof AnotherPlayer) {
         if (this.distanceTo(child) < 64) {
           if (child.centerY > this.centerY) {
-            child.renderPriority = this.renderPriority + 1
+            this.renderPriority = child.renderPriority - 1
           } else {
-            child.renderPriority = this.renderPriority - 1
+            this.renderPriority = child.renderPriority + 1
           }
         }
       }
@@ -38,8 +38,8 @@ export default class Tree extends Rectangle {
 
   public render(): void {
     super.render()
-    this.ctx.strokeStyle = 'red'
+    /*this.ctx.strokeStyle = 'red'
     this.ctx.lineWidth = 4
-    this.ctx.strokeRect(((this.x - this.camera.x) / 4) * 4, ~~((this.y - this.camera.y) / 4) * 4, this.width, this.height)
+    this.ctx.strokeRect(((this.x - this.camera.x) / 4) * 4, ~~((this.y - this.camera.y) / 4) * 4, this.width, this.height)*/
   }
 }
