@@ -196,7 +196,7 @@ class Player extends Rectangle {
   public update(): void {
     const { deltaTime } = this.globalState
 
-    if (this.sprite.getCurrentAnimation() === null) {
+    if (this.sprite.isActive(null)) {
       this.action = 'idle'
     }
 
